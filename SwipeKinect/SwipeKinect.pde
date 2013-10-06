@@ -20,7 +20,8 @@ color[]       userClr = new color[]{ color(255,0,0),
 Circle c;
 
 void setup() {
-  size(800, 800);
+  //size(800, 800);
+  size(640,480);
   noStroke();
   dragging = false;
 
@@ -48,43 +49,6 @@ void setup() {
   context.startGesture(SimpleOpenNI.GESTURE_WAVE);
 }
 
-void mouseDragged() {
-  dragging = true;
-  HashMap<String, Integer> position = new HashMap<String, Integer>();
-  position.put("x", mouseX);
-  position.put("y", mouseY);
-  positions.add(position);
-
-  c.xPos = mouseX;
-  c.yPos = mouseY;
-
-  if (positions.size() > 2) {
-    positions.remove(0);
-  }
-  println(positions);
-
-}
-
-void mouseReleased() {  
-  dragging = false;
-  HashMap first = (HashMap)positions.get(0);
-  HashMap last = (HashMap)positions.get(positions.size() - 1);
-  float xDir = (Integer)last.get("x") - (Integer)first.get("x");
-  float yDir = (Integer)last.get("y") - (Integer)first.get("y");
-  
-  println(xDir);
-  println(yDir);
-  
-  int limit = 20;
-  if (xDir > limit || yDir > limit ) {
-    xDir = xDir * 0.5; 
-    yDir = yDir * 0.5; 
-  }
-
-  c.xDir = xDir;
-  c.yDir = yDir;
-}
-
 void draw() {
   background(color(225, 74, 151));
 
@@ -103,46 +67,46 @@ void draw() {
       Iterator itrVec = vecList.iterator(); 
       p = vecList.get(0);
       context.convertRealWorldToProjective(p,p2d);
-      ellipse(p2d.x,p2d.y,20,20);
+//      ellipse(p2d.x,p2d.y,20,20);
       
       
       HashMap<String, Integer> position = new HashMap<String, Integer>();
       position.put("x", int(p2d.x));
       position.put("y", int(p2d.y));
       positions.add(position);
-      c.xPos = p2d.x;
-      c.yPos = p2d.y;
     
       if (positions.size() > 2) {
         positions.remove(0);
       }
-      println(positions);
       
       
-      c.xPos = p2d.x;
-      c.yPos = p2d.y;
-            
-      if (released() == true) {
+      if (c.released == true && Math.abs(c.xDir) > 1 && Math.abs(c.yDir) > 1) {
         c.fly();
-      }
+      } else {        
+        c.xPos = p2d.x;
+        c.yPos = p2d.y;  
+        
+        HashMap first = (HashMap)positions.get(0);
+        HashMap last = (HashMap)positions.get(positions.size() - 1);
+        float xDir = (Integer)last.get("x") - (Integer)first.get("x");
+        float yDir = (Integer)last.get("y") - (Integer)first.get("y");
+        if (xDir > 50 || yDir > 50) {
+          c.xDir = xDir;
+          c.yDir = yDir;
+          c.released = true; 
+        }
+        
+      }    
+
       c.display();
     }            
   }
+  println(positions);
+//  println(released());
 }
 
 
-boolean released() {
-  HashMap first = (HashMap)positions.get(0);
-  HashMap last = (HashMap)positions.get(positions.size() - 1);
-  float xDir = (Integer)last.get("x") - (Integer)first.get("x");
-  float yDir = (Integer)last.get("y") - (Integer)first.get("y");
 
-  if (xDir > 100) { 
-    return true;
-  } else {
-    return false;
-  }
-}
 
 
 // -----------------------------------------------------------------
