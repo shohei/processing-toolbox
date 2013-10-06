@@ -104,16 +104,45 @@ void draw() {
       p = vecList.get(0);
       context.convertRealWorldToProjective(p,p2d);
       ellipse(p2d.x,p2d.y,20,20);
-    }        
+      
+      
+      HashMap<String, Integer> position = new HashMap<String, Integer>();
+      position.put("x", int(p2d.x));
+      position.put("y", int(p2d.y));
+      positions.add(position);
+      c.xPos = p2d.x;
+      c.yPos = p2d.y;
+    
+      if (positions.size() > 2) {
+        positions.remove(0);
+      }
+      println(positions);
+      
+      
+      c.xPos = p2d.x;
+      c.yPos = p2d.y;
+            
+      if (released() == true) {
+        c.fly();
+      }
+      c.display();
+    }            
   }
-
-  if (dragging == false) {
-    c.fly();
-  }
-  c.display();
-
 }
 
+
+boolean released() {
+  HashMap first = (HashMap)positions.get(0);
+  HashMap last = (HashMap)positions.get(positions.size() - 1);
+  float xDir = (Integer)last.get("x") - (Integer)first.get("x");
+  float yDir = (Integer)last.get("y") - (Integer)first.get("y");
+
+  if (xDir > 100) { 
+    return true;
+  } else {
+    return false;
+  }
+}
 
 
 // -----------------------------------------------------------------
