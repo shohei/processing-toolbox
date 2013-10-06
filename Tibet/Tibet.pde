@@ -9,8 +9,6 @@ Minim minim;
 Minim minim2;
 Minim minim3;
 
-MovieMaker mm;
-
 PImage bg;
 
 float xmag, ymag = 0;
@@ -143,9 +141,6 @@ void stop()
 }
 
 void keyPressed() {
-  if (key == ' ') {
-    mm.finish();
-   }
 
   if (key == 's') {
        player3.play();
