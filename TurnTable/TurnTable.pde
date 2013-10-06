@@ -1,10 +1,15 @@
 import ddf.minim.*;
 
+AudioPlayer player, sc;
+Minim minim, scMinim;
+
 ArrayList positions;
 int time = 0;
 boolean dragging;
 float x, y, eSize;
 
+PImage artwork, imgMask;
+float angle;
 
 Circle c;
 
@@ -13,8 +18,17 @@ void setup() {
   noStroke();
   ellipseMode(CENTER);
   rectMode(CENTER);
+  imageMode(CENTER);
 
   dragging = false;
+
+  minim = new Minim(this);
+  player = minim.loadFile("Viva_La_Vida.mp3", 2048);
+  player.play();
+
+  scMinim = new Minim(this);
+  sc = minim.loadFile("sc.mp3", 2048);
+
 
   positions = new ArrayList();
   HashMap position = new HashMap();
@@ -26,56 +40,32 @@ void setup() {
   y = height / 2;
   eSize = 300;
   c = new Circle(x, y, eSize);
-
 }
 
 void draw() {
   background(color(225, 74, 151));
 
-  rect(x, y, 300, 300);
-/*
-  if (dragging == false) {
-    c.fly();
-  }
-*/
-  c.display();
+  translate(width/2,height/2);
+  angle++;
+  float c = angle * 0.02;
+  rotate(c);
+//  rect(0, 0, 300, 300);
+  artwork = loadImage("Viva_La_Vida.jpg");
+image(artwork, 0, 0);
+  
 }
 
 void mouseDragged() {
-  dragging = true;
-  HashMap<String, Integer> position = new HashMap<String, Integer>();
-  position.put("x", mouseX);
-  position.put("y", mouseY);
-  positions.add(position);
-
-  c.xPos = mouseX;
-  c.yPos = mouseY;
-
-  if (positions.size() > 2) {
-    positions.remove(0);
+  angle = mouseY;
+  if (!sc.isPlaying()) {
+    sc.rewind();
+    sc.play();
   }
-
-  println(positions);
+  player.pause();
 }
 
 void mouseReleased() {  
-  dragging = false;
-  HashMap first = (HashMap)positions.get(0);
-  HashMap last = (HashMap)positions.get(positions.size() - 1);
-  float xDir = (Integer)last.get("x") - (Integer)first.get("x");
-  float yDir = (Integer)last.get("y") - (Integer)first.get("y");
-  
-  println(xDir);
-  println(yDir);
-  
-  int limit = 20;
-  if (xDir > limit || yDir > limit ) {
-    xDir = xDir * 0.5; 
-    yDir = yDir * 0.5; 
-  }
-
-  c.xDir = xDir;
-  c.yDir = yDir;
+  player.play();
 }
 
 
