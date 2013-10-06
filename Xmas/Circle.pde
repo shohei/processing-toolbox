@@ -1,8 +1,7 @@
 class Circle {
-  float xPos, yPos, opacity; 
-  int speed, eSize;
+  float xPos, yPos, eSize, opacity, speed; 
  
-  Circle (float x, float y, int es) {
+  Circle (float x, float y, float es) {
     xPos = x; 
     yPos = y; 
     eSize = es;
@@ -18,14 +17,13 @@ class Circle {
     ellipse(xPos, yPos, eSize, eSize);
   }
  
-  void update() {
-    speed = 10;
-    xPos += speed; 
-    if (xPos > width) {
-      xPos = 0; 
-    }
+  void update() {    
+    opacity -= random(0, 3);
+    yPos += 5;
+    fill(255, opacity);
     ellipse(xPos, yPos, eSize, eSize);
   }  
 }
+
 
 
